@@ -329,7 +329,8 @@ class SynthesizeStream(tts.SynthesizeStream):
 
 
 def _socket_error(msg: dict[str, Any]) -> APIStatusError:
-    err = msg.get("error") if isinstance(msg.get("error"), dict) else msg
+    inner = msg.get("error")
+    err: dict[str, Any] = inner if isinstance(inner, dict) else msg
     code = err.get("code") or "error"
     status = {"invalid_api_key": 401, "insufficient_credits": 402, "busy": 429}.get(code, 400)
     logger.debug("yoob speech socket error", extra={"code": code})
